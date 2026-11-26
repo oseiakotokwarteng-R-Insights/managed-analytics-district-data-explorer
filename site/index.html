@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>District data explorer: Virginia and Texas House districts</title>
+  <meta name="description" content="Compare Virginia and Texas state House districts on transit, cars, renting, income and home heating, using public Census data. Works on a phone, with a table version and margins of error.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#details">Skip the map and go to the district details</a>
+
+  <header class="site-header">
+    <div class="wrap">
+      <p class="brand">District data explorer</p>
+    </div>
+  </header>
+
+  <aside class="notice" aria-label="About this project">
+    <div class="wrap">
+      <p><strong>A portfolio project, not an official tool.</strong> The numbers are public Census estimates for state House districts. They're survey estimates, so each comes with a margin of error, and the page shows it.</p>
+    </div>
+  </aside>
+
+  <main id="main" class="wrap">
+    <h1 class="sr-only">District data explorer</h1>
+
+    <section class="controls card" aria-labelledby="controls-h">
+      <h2 id="controls-h" class="sr-only">Choose a state and a measure</h2>
+      <div class="row">
+        <fieldset class="seg">
+          <legend>State</legend>
+          <div class="seg-buttons" id="state-buttons"></div>
+        </fieldset>
+        <div class="field">
+          <label for="measure">Measure</label>
+          <select id="measure"></select>
+        </div>
+        <div class="field">
+          <label for="jump">Go to a district</label>
+          <select id="jump"></select>
+        </div>
+      </div>
+      <p id="measure-what" class="hint"></p>
+    </section>
+
+    <div class="view-switch" role="group" aria-label="How to look at the districts">
+      <button type="button" id="view-map" aria-pressed="true">Map</button>
+      <button type="button" id="view-table" aria-pressed="false">Table</button>
+    </div>
+
+    <p id="status" class="sr-only" role="status" aria-live="polite"></p>
+
+    <section id="map-view" class="card map-card" aria-labelledby="map-h">
+      <h2 id="map-h" class="map-title"></h2>
+      <p id="map-summary" class="hint"></p>
+      <div class="map-wrap">
+        <svg id="map" role="group" aria-labelledby="map-h" aria-describedby="map-summary" focusable="false"></svg>
+        <div class="zoom" role="group" aria-label="Zoom the map">
+          <button type="button" id="zoom-in" aria-label="Zoom in">+</button>
+          <button type="button" id="zoom-out" aria-label="Zoom out">&minus;</button>
+          <button type="button" id="zoom-reset" aria-label="Show the whole state">&#8962;</button>
+        </div>
+        <div id="tip" class="tip" role="presentation" hidden></div>
+      </div>
+      <p class="hint">Tap or click a district. To zoom, use the buttons, pinch with two fingers, or hold Ctrl and scroll.</p>
+      <div id="legend" class="legend" role="group" aria-label="Map key"></div>
+      <label class="check"><input type="checkbox" id="show-shaky" checked> Mark districts where the estimate is shaky</label>
+    </section>
+
+    <section id="table-view" class="card" aria-labelledby="table-h" hidden>
+      <h2 id="table-h">All districts</h2>
+      <p class="hint">Every district with its number, margin of error and rank. Pick a column heading to sort.</p>
+      <div class="scroll">
+        <table id="table">
+          <thead></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="details" class="card details" tabindex="-1" aria-labelledby="details-h">
+      <h2 id="details-h">District details</h2>
+      <div id="details-body"></div>
+    </section>
+
+    <section class="card about" aria-labelledby="about-h">
+      <h2 id="about-h">How to read this</h2>
+      <ul>
+        <li><strong>Darker means higher.</strong> Districts are sorted into five groups of equal size, so each shade holds a fifth of the state's districts.</li>
+        <li><strong>The margin of error</strong> is how far the true number could plausibly be from the estimate. A &plusmn;1.1 point margin on 10.3% means the real figure is probably between 9.2% and 11.4%. Small shares in small districts can have large margins, and the page marks those as shaky.</li>
+        <li><strong>These are 5-year averages</strong> (2020 to 2024), not a snapshot of today.</li>
+        <li><strong>Electric heating is a rough sign, not a measure of clean energy.</strong> The Census doesn't count clean energy by district. It does count how homes are heated, which says something about who depends on the power bill for warmth.</li>
+        <li>The page shows what the numbers say. It doesn't explain why a district looks the way it does.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p id="sources"></p>
+      <p>Nothing about your visit is recorded, and no address is asked for. The map's drawing tools load from a public file host.</p>
+      <p>Powered by <a href="https://managedanalytics.co" target="_blank" rel="noopener">Managed Analytics</a>.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -45,6 +45,39 @@ function roundCoords(coords) {
   return coords.map(roundCoords);
 }
 
+// Which way a ring winds, from the shoelace formula. Positive means counterclockwise
+// (with north up). D3 draws on a sphere and reads an outline wound the "wrong" way as the
+// whole world except the shape, so outer rings must be clockwise and holes counterclockwise.
+export function ringArea(ring) {
+  let sum = 0;
+  for (let i = 0; i < ring.length - 1; i++) sum += ring[i][0] * ring[i + 1][1] - ring[i + 1][0] * ring[i][1];
+  return sum / 2;
+}
+
+// A ring with no area (a tiny island that collapsed to a line when simplified) draws nothing,
+// so it's dropped. Returns null if the whole polygon disappears.
+function windPolygon(rings) {
+  const wound = rings
+    .filter((ring) => ringArea(ring) !== 0)
+    .map((ring, i) => {
+      const wantClockwise = i === 0; // the first ring is the outer edge
+      const isClockwise = ringArea(ring) < 0;
+      return isClockwise === wantClockwise ? ring : ring.slice().reverse();
+    });
+  // If the outer edge itself had no area, nothing sensible is left of this polygon.
+  if (!wound.length || ringArea(rings[0]) === 0) return null;
+  return wound;
+}
+
+function windGeometry(geometry) {
+  if (geometry.type === "Polygon") {
+    const p = windPolygon(geometry.coordinates);
+    return p ? { type: "Polygon", coordinates: p } : { type: "MultiPolygon", coordinates: [] };
+  }
+  const polys = geometry.coordinates.map(windPolygon).filter(Boolean);
+  return { type: "MultiPolygon", coordinates: polys };
+}
+
 function simplifyShapes(features) {
   const topo = topology({ districts: { type: "FeatureCollection", features } });
   const pre = presimplify(topo);
@@ -56,7 +89,7 @@ function simplifyShapes(features) {
     type: "Feature",
     id: f.id,
     properties: { id: f.id },
-    geometry: { type: f.geometry.type, coordinates: roundCoords(f.geometry.coordinates) },
+    geometry: windGeometry({ type: f.geometry.type, coordinates: roundCoords(f.geometry.coordinates) }),
   }));
 }
 

@@ -93,6 +93,24 @@ for (const s of STATES) {
     }
   });
 
+  test(`${s.name}: outer edges wind clockwise and holes counterclockwise, the way D3 draws them`, () => {
+    // Without this the map is drawn as "everything except the district", many thousands of pixels tall.
+    const area = (ring) => {
+      let sum = 0;
+      for (let i = 0; i < ring.length - 1; i++) sum += ring[i][0] * ring[i + 1][1] - ring[i + 1][0] * ring[i][1];
+      return sum / 2;
+    };
+    for (const f of map.features) {
+      const polygons = f.geometry.type === "Polygon" ? [f.geometry.coordinates] : f.geometry.coordinates;
+      for (const rings of polygons) {
+        rings.forEach((ring, i) => {
+          if (i === 0) assert.ok(area(ring) < 0, `${f.id} has an outer edge wound the wrong way`);
+          else assert.ok(area(ring) > 0, `${f.id} has a hole wound the wrong way`);
+        });
+      }
+    }
+  });
+
   test(`${s.name}: the files are small enough to load fast on a phone`, () => {
     assert.ok(size(`site/data/${s.slug}.json`) < 120 * 1024, "numbers file under 120 KB");
     assert.ok(size(`site/data/${s.slug}-map.json`) < 800 * 1024, "map file under 800 KB");
