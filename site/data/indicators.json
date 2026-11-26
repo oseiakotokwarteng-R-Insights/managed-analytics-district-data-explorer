@@ -1,0 +1,44 @@
+{
+ "transit": {
+  "label": "Transit commuters",
+  "unit": "% of workers",
+  "kind": "share",
+  "what": "Share of workers aged 16 and over who get to work by public transportation."
+ },
+ "novehicle": {
+  "label": "Homes without a vehicle",
+  "unit": "% of homes",
+  "kind": "share",
+  "what": "Share of occupied homes with no car, truck or van available."
+ },
+ "renters": {
+  "label": "Renters",
+  "unit": "% of homes",
+  "kind": "share",
+  "what": "Share of occupied homes that are rented."
+ },
+ "rentstress": {
+  "label": "Rent takes 30% or more of income",
+  "unit": "% of renter homes",
+  "kind": "share",
+  "what": "Share of renting homes spending 30% or more of their income on rent, out of those where the share could be worked out."
+ },
+ "income": {
+  "label": "Median household income",
+  "unit": "dollars a year",
+  "kind": "value",
+  "what": "The middle household income, in 2024 dollars. Half of households earn more, half earn less."
+ },
+ "electric": {
+  "label": "Homes heated by electricity",
+  "unit": "% of homes",
+  "kind": "share",
+  "what": "Share of occupied homes that use electricity as their main heating fuel. A rough sign of how many households depend on the power bill for heat."
+ },
+ "population": {
+  "label": "Population",
+  "unit": "people",
+  "kind": "value",
+  "what": "Total people living in the district."
+ }
+}
